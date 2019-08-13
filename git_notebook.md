@@ -122,7 +122,170 @@ git remote add origin git@github.com:XXX/XXX.git
 git push -u origin master
 ```
 
-暂时未上传成功。
+
+
+~~暂时未上传成功?~~
+
+> 具体问题:
+>
+> ```bash
+> fatal: refusing to merge unrelated histories
+> ```
+>
+> 如果合并了两个不同的开始提交的仓库，在新的 git 会发现这两个仓库可能不是同一个，为了防止开发者上传错误
+>
+> 此次是由于再不同的文件夹上测试的提交，没有一致的`commit`所以才会出现如此内容；
+>
+> 解决方法，告诉`github`没有错，`--allow-unrelated-histories`(允许合并不相关历史)
+>
+> ```bash
+> git pull origin master --allow-unrelated-histories
+> ```
+>
+> 参考自：https://blog.csdn.net/lindexi_gd/article/details/52554159
+
+
+
+### 关于remote,远程管理
+
+> ## 基本使用
+>
+> git是一个分布式代码管理工具，所以可以支持多个仓库，在git里，服务器上的仓库在本地称之为`remote`。
+> 
+>直接`clone`一个仓库：
+> 
+>```bash
+> $: git clone git@search.ued.taobao.net:projects/search.git
+>```
+> 
+>另外一种`clone`方式：
+> 
+> ```bash
+> # 创建目录初始化本地仓库
+>$: mkdir search && cd search
+> $: git init
+># 添加远程仓库路径
+> $: git remote add github git@github.com:yyfrankyy/search.git
+> # 实际上，pull 就是 fetch + merge
+> $: git pull github --all --tags
+> ```
+> 
+> 把工作目录迁移到github上面：
+> 
+> ```bash
+> $: git remote add github git@github.com:yyfrankyy/search.git
+>$: git push github --all --tags
+> ```
+>
+> 显示所有的远程仓库
+> 
+> ```bash
+> $: git remote -v
+>origin	git@search.ued.taobao.net:projects/search.git (fetch)
+> origin	git@search.ued.taobao.net:projects/search.git (push)
+>github	git@github.com:yyfrankyy/search.git (fetch)
+> github	git@github.com:yyfrankyy/search.git (push)
+> ```
+> 
+> 重命名远程仓库
+> 
+> ```bash
+> $: git remote rename github gh
+>$: git remote
+> origin
+>gh
+> ```
+> 
+> 删除远程仓库
+> 
+> ```bash
+> $: git remote rm github
+>$: git remote
+> origin
+>```
+> 
+> 从远程仓库抓取数据，更新本地仓库：
+> 
+> ```bash
+> $: git fetch origin
+>remote: Counting objects: 58, done.
+> remote: Compressing objects: 100% (41/41), done.
+>remote: Total 44 (delta 24), reused 1 (delta 0)
+> Unpacking objects: 100% (44/44), done.
+> From git://search.ued.taobao.net:projects/search.git
+>  * [new branch]      product     -> origin/product
+> ```
+> 
+> 查看远程仓库信息，可用于跟踪别人的`push`：
+> 
+> ```bash
+> $: git remote show origin
+>* remote origin
+> Fetch URL: git@search.ued.taobao.net:projects/search.git
+>Push  URL: git@search.ued.taobao.net:projects/search.git
+> HEAD branch: master
+> Remote branches:
+>  master  tracked
+>    p4popt  tracked
+>    prepub  tracked
+>    product tracked
+>   Local branches configured for 'git pull':
+>     master  merges with remote master
+>     p4popt  merges with remote p4popt
+>     prepub  merges with remote prepub
+>     product merges with remote product
+>   Local refs configured for 'git push':
+>     master  pushes to master  (up to date)
+>     p4popt  pushes to p4popt  (up to date)
+>     prepub  pushes to prepub  (up to date)
+>     product pushes to product (up to date)
+>   ```
+>    from: https://blog.csdn.net/pgmsoul/article/details/7883706
+
+
+
+### 关于pull， 同步
+
+> `git pull`命令用于从另一个存储库或本地分支获取并集成(整合)。`git pull`命令的作用是：取回远程主机某个分支的更新，再与本地的指定分支合并，它的完整格式稍稍有点复杂。
+>
+> **使用语法**
+>
+> ```shell
+> git pull [options] [<repository> [<refspec>…]]
+> Shell
+> ```
+>
+> ## 描述
+>
+> 将远程存储库中的更改合并到当前分支中。在默认模式下，`git pull`是`git fetch`后跟`git merge FETCH_HEAD`的缩写。
+>
+> 更准确地说，`git pull`使用给定的参数运行`git fetch`，并调用`git merge`将检索到的分支头合并到当前分支中。 使用`--rebase`，它运行`git rebase`而不是`git merge`。
+>
+> ## 示例
+>
+> 以下是一些示例 -
+>
+> ```shell
+> $ git pull <远程主机名> <远程分支名>:<本地分支名>
+> Shell
+> ```
+>
+> 比如，要取回`origin`主机的`next`分支，与本地的`master`分支合并，需要写成下面这样 -
+>
+> ```shell
+> $ git pull origin next:master
+> Shell
+> ```
+>
+> 如果远程分支(`next`)要与当前分支合并，则冒号后面的部分可以省略。上面命令可以简写为：
+>
+> ```shell
+> $ git pull origin next
+> ```
+>
+> 参考自： https://www.yiibai.com/git/git_pull.html  
+
+
 
 
 
